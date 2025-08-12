@@ -1,19 +1,19 @@
 package com.threedfly.bff.service;
 
 import com.threedfly.bff.dto.external.order.*;
+import com.threedfly.bff.exception.OrderNotFoundException;
+import com.threedfly.bff.exception.OrderServiceException;
+import com.threedfly.bff.exception.SupplierNotFoundException;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.retry.annotation.Retry;
 import io.github.resilience4j.timelimiter.annotation.TimeLimiter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
 
-import java.time.Duration;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -32,7 +32,6 @@ import java.util.concurrent.CompletableFuture;
 @Slf4j
 public class OrderServiceClient {
 
-    @Qualifier("orderServiceWebClient")
     private final WebClient orderServiceWebClient;
 
     /**
@@ -192,22 +191,4 @@ public class OrderServiceClient {
         throw new OrderServiceException("Order service temporarily unavailable. Cannot update order: " + orderId);
     }
 
-    // Custom exceptions
-    public static class OrderServiceException extends RuntimeException {
-        public OrderServiceException(String message) {
-            super(message);
-        }
-    }
-
-    public static class SupplierNotFoundException extends RuntimeException {
-        public SupplierNotFoundException(String message) {
-            super(message);
-        }
-    }
-
-    public static class OrderNotFoundException extends RuntimeException {
-        public OrderNotFoundException(String message) {
-            super(message);
-        }
-    }
 }

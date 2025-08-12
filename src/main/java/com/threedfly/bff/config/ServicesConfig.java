@@ -17,6 +17,15 @@ public class ServicesConfig {
     private OrderService orderService = new OrderService();
     private ProductService productService = new ProductService();
     private String apiKey;
+    
+    // Convenience methods for URL access
+    public String getOrderServiceUrl() {
+        return orderService.getBaseUrl();
+    }
+    
+    public String getProductServiceUrl() {
+        return productService.getBaseUrl();
+    }
 
     @Data
     public static class OrderService {

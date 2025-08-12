@@ -1,12 +1,14 @@
 package com.threedfly.bff.service;
 
 import com.threedfly.bff.dto.external.product.*;
+import com.threedfly.bff.exception.PaymentNotFoundException;
+import com.threedfly.bff.exception.ProductNotFoundException;
+import com.threedfly.bff.exception.ProductServiceException;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.retry.annotation.Retry;
 import io.github.resilience4j.timelimiter.annotation.TimeLimiter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -29,7 +31,6 @@ import java.util.concurrent.CompletableFuture;
 @Slf4j
 public class ProductServiceClient {
 
-    @Qualifier("productServiceWebClient")
     private final WebClient productServiceWebClient;
 
     /**
@@ -183,22 +184,4 @@ public class ProductServiceClient {
         return CompletableFuture.completedFuture(fallbackProduct);
     }
 
-    // Custom exceptions
-    public static class ProductServiceException extends RuntimeException {
-        public ProductServiceException(String message) {
-            super(message);
-        }
-    }
-
-    public static class PaymentNotFoundException extends RuntimeException {
-        public PaymentNotFoundException(String message) {
-            super(message);
-        }
-    }
-
-    public static class ProductNotFoundException extends RuntimeException {
-        public ProductNotFoundException(String message) {
-            super(message);
-        }
-    }
 }

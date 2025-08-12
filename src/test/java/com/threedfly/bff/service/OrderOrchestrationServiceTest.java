@@ -5,6 +5,8 @@ import com.threedfly.bff.dto.OrderResponse;
 import com.threedfly.bff.dto.external.order.*;
 import com.threedfly.bff.dto.external.product.*;
 import com.threedfly.bff.entity.OrderProcessingLog;
+import com.threedfly.bff.exception.ProductServiceException;
+import com.threedfly.bff.exception.SupplierNotFoundException;
 import com.threedfly.bff.repository.OrderProcessingLogRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -155,7 +157,7 @@ class OrderOrchestrationServiceTest {
 
         when(orderServiceClient.findClosestSupplier(anyString(), anyDouble(), anyDouble()))
                 .thenReturn(CompletableFuture.failedFuture(
-                        new OrderServiceClient.SupplierNotFoundException("No suppliers found")));
+                        new SupplierNotFoundException("No suppliers found")));
 
         // Act & Assert
         CompletableFuture<OrderResponse> result = orderOrchestrationService.processOrder(testRequest);
@@ -186,7 +188,7 @@ class OrderOrchestrationServiceTest {
 
         when(productServiceClient.executePayment(anyString(), any(ExecutePaymentRequest.class)))
                 .thenReturn(CompletableFuture.failedFuture(
-                        new ProductServiceClient.ProductServiceException("Payment execution failed")));
+                        new ProductServiceException("Payment execution failed")));
 
         // Act & Assert
         CompletableFuture<OrderResponse> result = orderOrchestrationService.processOrder(testRequest);
